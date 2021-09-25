@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+group 'plugin.managercreator'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        url 'https://repo.aikar.co/content/groups/aikar/'
+    }
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
+    implementation 'apple.utilities:AppleUtilities:1.0.BUILD-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+    implementation 'net.luckperms:api:5.3'
+}
+
+test {
+    useJUnitPlatform()
+}
+def filesToCopy = copySpec {
+    from jar.getArchiveFile()
+}
+
+task jarAndCopyFiles {
+    dependsOn(jar)
+    doLast {
+        ['C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\HeroicsLoadDependencies\\lib\\',
+         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsUtilities\\lib\\',
+         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsMisc\\lib\\',
+         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsBosses\\lib\\'].each { dest ->
+            {
+                copy {
+                    with filesToCopy
+                    into dest
+                }
+            }
+        }
+    }
+    outputs.upToDateWhen {false}
+}
+jar{
+    outputs.upToDateWhen {false}
+}
