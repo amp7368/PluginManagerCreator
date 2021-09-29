@@ -23,15 +23,11 @@ java {
         languageVersion.set(JavaLanguageVersion.of(16))
     }
 }
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = "sources"
-}
 publishing {
     publications {
         myPublication(MavenPublication) {
             from components.java
-            artifact sourceJar
+            artifact shadowJar
             pom {
                 group = 'plugin.managercreator'
                 version = 'v1.0'
@@ -41,9 +37,6 @@ publishing {
     }
 }
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-
     implementation 'com.github.amp7368:AppleUtilities:AppleUtilitiesv1.0'
 
     compileOnly 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
@@ -51,33 +44,10 @@ dependencies {
     compileOnly 'net.luckperms:api:5.3'
 }
 
-test {
-    useJUnitPlatform()
-}
-def filesToCopy = copySpec {
-    from jar.getArchiveFile()
-}
-
-task jarAndCopyFiles {
-    dependsOn(jar)
-    doLast {
-        ['C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\HeroicsLoadDependencies\\lib\\',
-         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsUtilities\\lib\\',
-         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsMisc\\lib\\',
-         'C:\\Users\\Aaron\\Desktop\\Idea\\Minecraft\\Heroics\\AppleHeroicsBosses\\lib\\'].each { dest ->
-            {
-                copy {
-                    with filesToCopy
-                    into dest
-                }
-            }
-        }
+shadowJar {
+    dependsOn jar {
+        outputs.upToDateWhen { false }
     }
     outputs.upToDateWhen { false }
-}
-jar {
-    outputs.upToDateWhen { false }
-}
-shadowJar{
     relocate('apple.utilities', 'plugin.util.plugin.apple.utilities')
 }
