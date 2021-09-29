@@ -1,9 +1,12 @@
 plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
     id 'java'
+    id 'java-library'
+    id 'maven-publish'
 }
 
 group 'plugin.managercreator'
-version '1.0-SNAPSHOT'
+version 'v1.0'
 
 repositories {
     mavenCentral()
@@ -13,18 +16,39 @@ repositories {
     maven {
         url 'https://repo.aikar.co/content/groups/aikar/'
     }
-    flatDir {
-        dirs 'lib'
+    maven { url "https://jitpack.io" }
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(16))
     }
 }
-
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = "sources"
+}
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            pom {
+                group = 'plugin.managercreator'
+                version = 'v1.0'
+                name = 'PluginManagerCreator'
+            }
+        }
+    }
+}
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-    implementation 'apple.utilities:AppleUtilities:1.0.BUILD-SNAPSHOT'
-    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+
+    implementation 'com.github.amp7368:AppleUtilities:AppleUtilitiesv1.0'
+
+    compileOnly 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
-    implementation 'net.luckperms:api:5.3'
+    compileOnly 'net.luckperms:api:5.3'
 }
 
 test {
@@ -49,8 +73,11 @@ task jarAndCopyFiles {
             }
         }
     }
-    outputs.upToDateWhen {false}
+    outputs.upToDateWhen { false }
 }
-jar{
-    outputs.upToDateWhen {false}
+jar {
+    outputs.upToDateWhen { false }
+}
+shadowJar{
+    relocate('apple.utilities', 'plugin.util.plugin.apple.utilities')
 }

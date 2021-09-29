@@ -80,8 +80,6 @@ public abstract class PluginManaged extends JavaPlugin {
     private void setupLuckPerms() {
         if (Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
             luckPerms = LuckPermsProvider.get();
-        } else {
-            getLogger().log(Level.WARNING, "LuckPerms is not enabled, some functions may be disabled.");
         }
     }
 

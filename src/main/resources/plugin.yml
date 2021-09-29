@@ -4,4 +4,4 @@ api-version: "1.17"
 authors: [ 'Apple' ]
 main: apple.util.plugin.ApplePluginPlugin
 description: a plugin manager
-depend: ['LuckPerms']
+softdepend: [ 'LuckPerms' ]
