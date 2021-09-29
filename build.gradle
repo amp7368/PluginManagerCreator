@@ -1,7 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.0.0"
-    id 'java'
     id 'java-library'
+    id 'java'
     id 'maven-publish'
 }
 
@@ -18,15 +18,13 @@ repositories {
     }
     maven { url "https://jitpack.io" }
 }
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(16))
-    }
-}
+
+project.targetCompatibility = JavaVersion.VERSION_16
+project.sourceCompatibility = JavaVersion.VERSION_16
+
 publishing {
     publications {
         myPublication(MavenPublication) {
-            from components.java
             artifact shadowJar
             pom {
                 group = 'plugin.managercreator'
