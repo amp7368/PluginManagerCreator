@@ -46,8 +46,10 @@ dependencies {
 
 shadowJar {
     dependsOn jar {
+        classifier 'simple'
         outputs.upToDateWhen { false }
     }
+    classifier 'all'
     outputs.upToDateWhen { false }
     relocate('apple.utilities', 'plugin.util.plugin.apple.utilities')
 }
