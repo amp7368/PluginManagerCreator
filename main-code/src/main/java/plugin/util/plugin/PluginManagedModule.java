@@ -1,10 +1,6 @@
 package plugin.util.plugin;
 
-import org.bukkit.plugin.PluginLogger;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +9,11 @@ public abstract class PluginManagedModule {
     private Logger logger;
     private PluginManaged parent;
 
-    public void init(PluginManaged parent) {
+    public void _init(PluginManaged parent) {
         this.parent = parent;
+    }
+
+    public void init() {
     }
 
     public abstract void enable();

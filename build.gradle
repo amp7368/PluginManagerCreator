@@ -1,53 +1,101 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'java-library'
     id 'java'
     id 'maven-publish'
 }
 
-group 'plugin.managercreator'
-version 'v1.0'
+allprojects { p ->
+    group groupValue
+    version versionValue
+}
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://papermc.io/repo/repository/maven-public/'
+apply from: 'private-gradle.properties'
+
+ext {
+    shadowCompileOnly =
+            [
+                    'co.aikar:acf-paper:0.5.0-SNAPSHOT',
+                    'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT',
+                    'net.luckperms:api:5.3',
+                    'org.jetbrains:annotations:22.0.0'
+            ]
+    shadowImplementation =
+            [
+                    'com.github.amp7368:AppleUtilities:AppleUtilitiesv1.0'
+            ]
+}
+subprojects {
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'java-library'
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://papermc.io/repo/repository/maven-public/'
+        }
+        maven {
+            url 'https://repo.aikar.co/content/groups/aikar/'
+        }
+        maven { url "https://jitpack.io" }
     }
-    maven {
-        url 'https://repo.aikar.co/content/groups/aikar/'
+    dependencies {
+        if (project.name != 'main-code') {
+            dependencies.implementation project(path: ':main-code')
+        }
     }
-    maven { url "https://jitpack.io" }
+    jar {
+        classifier 'simple'
+    }
+    task relocateShadowJar(type: ConfigureShadowRelocation) {
+        target = tasks.shadowJar
+        prefix = packageValue // Default value is "shadow"
+    }
+    publishing {
+        publications {
+            fullPublication(MavenPublication) {
+                artifact shadowJar
+                pom {
+                    group = project.group
+                    version = project.version
+                    name = project.name
+                }
+            }
+        }
+    }
+    shadowJar {
+        dependsOn(relocateShadowJar)
+        outputs.upToDateWhen { false }
+        archiveClassifier.set('')
+        dependencies {
+            parent.ext.shadowCompileOnly.forEach (d) -> {
+                shadowJar.dependencies {
+                    exclude(dependency(d))
+                }
+            }
+        }
+    }
 }
 
 project.targetCompatibility = JavaVersion.VERSION_16
 project.sourceCompatibility = JavaVersion.VERSION_16
 
-publishing {
-    publications {
-        myPublication(MavenPublication) {
-            artifact shadowJar
-            pom {
-                group = 'plugin.managercreator'
-                version = 'v1.0'
-                name = 'PluginManagerCreator'
+def filesToCopy = copySpec {
+    from jar.getArchiveFile()
+}
+task jarAndCopyFiles {
+    dependsOn(jar)
+    doLast {
+        if (outputfile != null && !outputfile.isEmpty()) {
+            copy {
+                with filesToCopy
+                into outputfile
             }
         }
     }
-}
-dependencies {
-    implementation 'com.github.amp7368:AppleUtilities:AppleUtilitiesv1.0'
-
-    compileOnly 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
-    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
-    compileOnly 'net.luckperms:api:5.3'
-}
-
-shadowJar {
-    dependsOn jar {
-        classifier 'simple'
-        outputs.upToDateWhen { false }
-    }
-    classifier 'all'
     outputs.upToDateWhen { false }
-    relocate('apple.utilities', 'plugin.util.plugin.apple.utilities')
 }

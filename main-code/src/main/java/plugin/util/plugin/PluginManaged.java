@@ -65,7 +65,8 @@ public abstract class PluginManaged extends JavaPlugin {
     }
 
     private void loadModule(PluginManagedModule module) {
-        module.init(this);
+        module._init(this);
+        module.init();
     }
 
     public void enableModule(PluginManagedModule module) {

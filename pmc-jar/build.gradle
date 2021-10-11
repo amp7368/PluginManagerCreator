@@ -1,0 +1,22 @@
+dependencies {
+    parent.ext.shadowCompileOnly.forEach (d) -> {
+        dependencies.compileOnly d
+    }
+    parent.ext.shadowImplementation.forEach (d) -> {
+        dependencies.compileOnly d
+    }
+}
+shadowJar{
+    dependencies {
+        parent.ext.shadowCompileOnly.forEach (d) -> {
+            shadowJar.dependencies {
+                exclude(dependency(d))
+            }
+        }
+        parent.ext.shadowImplementation.forEach (d) -> {
+            shadowJar.dependencies {
+                exclude(dependency(d))
+            }
+        }
+    }
+}

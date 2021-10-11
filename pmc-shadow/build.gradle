@@ -1,0 +1,8 @@
+dependencies {
+    parent.ext.shadowCompileOnly.forEach (d) -> {
+        dependencies.compileOnly d
+    }
+    parent.ext.shadowImplementation.forEach (d) -> {
+        dependencies.implementation d
+    }
+}

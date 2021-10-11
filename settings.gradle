@@ -1,2 +1,4 @@
 rootProject.name = 'PluginManagerCreator'
-
+include 'pmc-jar'
+include 'pmc-shadow'
+include 'main-code'
