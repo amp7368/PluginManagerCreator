@@ -1,5 +1,7 @@
 package plugin.util.plugin;
 
+import apple.utilities.util.FileFormatting;
+
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +42,10 @@ public abstract class PluginManagedModule {
         File file = new File(parent.getDataFolder(), getName());
         if (!file.exists()) file.mkdirs();
         return file;
+    }
+
+    public File getFile(String... children) {
+        return FileFormatting.fileWithChildren(getDataFolder(), children);
     }
 
     public boolean shouldEnable() {
