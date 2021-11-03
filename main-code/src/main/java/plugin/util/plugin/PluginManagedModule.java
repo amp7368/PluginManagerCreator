@@ -71,7 +71,7 @@ public abstract class PluginManagedModule {
         this.enabled = enabled;
     }
 
-    private class PluginManagedLogger {
+    public class PluginManagedLogger {
         private Logger logger;
 
         public void run(BiConsumer<Logger, String> loggerFunction, String formatted, Object... args) {
