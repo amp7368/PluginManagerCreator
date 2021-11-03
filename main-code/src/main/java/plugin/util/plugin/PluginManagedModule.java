@@ -79,16 +79,16 @@ public abstract class PluginManagedModule {
             loggerFunction.accept(logger, getLoggingFormatted(formatted, args));
         }
 
-        public void info(String msg) {
-            log(Level.INFO, msg);
+        public void info(String msg, Object... args) {
+            log(Level.INFO, msg, args);
         }
 
-        public void warning(String msg) {
-            log(Level.WARNING, msg);
+        public void warning(String msg, Object... args) {
+            log(Level.WARNING, msg, args);
         }
 
-        public void severe(String msg) {
-            log(Level.SEVERE, msg);
+        public void severe(String msg, Object... args) {
+            log(Level.SEVERE, msg, args);
         }
 
         public void log(Level level, String formatted, Object... args) {
