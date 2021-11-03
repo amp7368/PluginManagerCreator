@@ -36,6 +36,7 @@ public abstract class PluginManaged extends JavaPlugin {
         for (PluginManagedModule module : modules) {
             if (module.shouldEnable()) {
                 module.onDisable();
+                module.setEnabled(false);
             }
         }
     }
