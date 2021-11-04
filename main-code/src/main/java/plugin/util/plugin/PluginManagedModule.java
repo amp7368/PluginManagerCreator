@@ -63,6 +63,10 @@ public abstract class PluginManagedModule {
         return parent;
     }
 
+    public PluginManagedModule getModule() {
+        return this;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
