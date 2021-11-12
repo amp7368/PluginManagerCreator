@@ -21,26 +21,64 @@ public abstract class PluginManaged extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        onLoadPre();
         loadModules();
+        onLoadPost();
+    }
+
+    public void onLoadPre() {
+    }
+
+    public void onLoadPost() {
     }
 
 
     @Override
     public void onEnable() {
-        setupACF();
+        onEnablePreInit();
+        setUp();
+        onEnablePre();
+        initialize();
         enableModules();
+        onEnablePost();
     }
+
+
+    public void onEnablePreInit() {
+    }
+
+    public void onEnablePre() {
+    }
+
+    public void initialize() {
+    }
+
+    public void onEnablePost() {
+    }
+
 
     @Override
     public void onDisable() {
+        onDisablePre();
         for (PluginManagedModule module : modules) {
             if (module.shouldEnable()) {
                 module.onDisable();
                 module.setEnabled(false);
             }
         }
+        onDisablePost();
     }
 
+    public void onDisablePre() {
+    }
+
+    public void onDisablePost() {
+    }
+
+
+    //
+    // Dealing with modules
+    //
     private void loadModules() {
         for (PluginManagedModule module : getModules()) {
             registerModule(module);
@@ -75,6 +113,14 @@ public abstract class PluginManaged extends JavaPlugin {
         getLogger().log(Level.INFO, "Enabled Module: " + module.getName());
     }
 
+    // 
+    // Setting up integration
+    //
+    private void setUp() {
+        setupACF();
+        setupLuckPerms();
+    }
+
     private void setupACF() {
         commandManager = new PaperCommandManager(this);
     }
@@ -93,6 +139,10 @@ public abstract class PluginManaged extends JavaPlugin {
         return commandManager;
     }
 
+
+    // 
+    // Quality of Life utilities
+    //
     public void registerEvents(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
