@@ -91,20 +91,24 @@ public abstract class PluginManaged extends JavaPlugin {
     public abstract Collection<PluginManagedModule> getModules();
 
     private void enableModules() {
-        for (PluginManagedModule module : modules) {
+        for (PluginManagedModule module : getRegisteredModules()) {
             if (module.shouldEnable()) {
                 enableModule(module);
             }
         }
     }
 
+    public List<PluginManagedModule> getRegisteredModules() {
+        return modules;
+    }
+
     private void registerModule(PluginManagedModule module) {
         modules.add(module);
+        module._init(this);
         module.setLogger(getLogger());
     }
 
     private void loadModule(PluginManagedModule module) {
-        module._init(this);
         module.init();
     }
 

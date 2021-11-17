@@ -11,6 +11,7 @@ public abstract class PluginManagedModule {
     private boolean enabled;
     private PluginManaged parent;
     private final PluginManagedLogger loggerWrapper = new PluginManagedLogger();
+    private File dataFolder = null;
 
     public void _init(PluginManaged parent) {
         this.parent = parent;
@@ -44,9 +45,11 @@ public abstract class PluginManagedModule {
     }
 
     public File getDataFolder() {
-        File file = new File(parent.getDataFolder(), getName());
-        if (!file.exists()) file.mkdirs();
-        return file;
+        if (this.dataFolder == null) {
+            this.dataFolder = new File(parent.getDataFolder(), getName());
+            if (!this.dataFolder.exists()) this.dataFolder.mkdirs();
+        }
+        return this.dataFolder;
     }
 
     public File getFile(String... children) {
