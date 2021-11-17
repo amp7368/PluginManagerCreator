@@ -24,7 +24,7 @@ ext {
             ]
     shadowImplementation =
             [
-                    'com.github.amp7368:AppleUtilities:AppleUtilitiesv1.0'
+                    'com.github.amp7368:AppleUtilities:v1.1'
             ]
 }
 subprojects {
